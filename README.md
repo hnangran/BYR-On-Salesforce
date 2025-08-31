@@ -1,5 +1,4 @@
 # BYR-On-Salesforce
-Build your resume on Salesforce  
 --------------------Documentation History Begins--------------------  
 Update#: 1  
 Date Modified: 08/31/2025  
