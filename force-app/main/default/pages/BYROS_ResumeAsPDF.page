@@ -1,0 +1,183 @@
+<apex:page ></apex:page>
+<!--
+<apex:page controller="BYROS_ResumePDFController"
+    renderAs="pdf"
+    contentType="application/pdf#{!fileName}"
+    showHeader="false"
+    sidebar="false"
+    title="{!resumeDetails.applicantName} - Resume">
+
+    <style>
+        .container { max-width: 900px; margin: 24px auto; }
+        .h-large { font-size: 22px; text-align: center; margin-bottom: 8px; }
+        .h-medium { font-size: 16px; text-align: center; margin-bottom: 8px; }
+        .section { font-size: 13px; margin: 12px 16px; padding: 8px; }
+        .left { text-align: left; }
+        .center { text-align: center; }
+        .block { margin: 8px 12px; }
+        .hr { border: 0; border-top: 1px solid #d8dde6; margin: 8px; }
+        .preserve-lines { white-space: pre-line; } /* mimic lightning-formatted-text */
+        b { font-weight: 700; }
+        i { font-style: italic; }
+    </style>
+
+<apex:outputPanel layout="block" style="font-size:11px;color:#54698d;margin:8px 0">
+  <b>DEBUG</b> — resumeId: <code>{!resumeId}</code>
+  • profileName: <code>{!resumeDetails.profileName}</code>
+  • resumeName: <code>{!resumeDetails.resumeName}</code>
+  • skills: <code>{!resumeDetails.skillDetails.size}</code>
+  • certs: <code>{!resumeDetails.certificationDetails.size}</code>
+  • work: <code>{!resumeDetails.workExperienceDetails.size}</code>
+  • edu: <code>{!resumeDetails.educationDetails.size}</code>
+</apex:outputPanel>
+<apex:pageMessages />    
+
+    <div class="container">
+
+        <div class="h-large">{!resumeDetails.applicantName}</div>
+
+        <div class="h-medium">
+            {!resumeDetails.applicantEmail}
+            <apex:outputText rendered="{!NOT(ISBLANK(resumeDetails.applicantMobilePhone))}">
+                | {!resumeDetails.applicantMobilePhone}
+            </apex:outputText>
+            <apex:outputText rendered="{!OR(NOT(ISBLANK(resumeDetails.applicantCity)), NOT(ISBLANK(resumeDetails.applicantState)))}">
+                | {!resumeDetails.applicantCity}
+                <apex:outputText rendered="{!AND(NOT(ISBLANK(resumeDetails.applicantCity)), NOT(ISBLANK(resumeDetails.applicantState)))}">, </apex:outputText>
+                {!resumeDetails.applicantState}
+            </apex:outputText>
+        </div>
+
+        <hr class="hr"/>
+
+        <apex:outputPanel rendered="{!NOT(ISBLANK(resumeDetails.summary))}">
+            <div class="section center">
+                <b>SUMMARY</b><br/>
+                <div class="block left preserve-lines">
+                    <apex:outputText value="{!resumeDetails.summary}" />
+                </div>
+            </div>
+        </apex:outputPanel>
+
+        <hr class="hr"/>
+
+        <div class="section center">
+            <b>SKILLS AND CERTIFICATIONS</b>
+            <div class="block left">
+                <b>Skills:</b>
+                <apex:outputPanel rendered="{!resumeDetails.skillDetails.size > 0}">
+                    <div class="block left">
+                        <apex:repeat value="{!resumeDetails.skillDetails}" var="sk">
+                            • <apex:outputText value="{!sk.skillName}"/><br/>
+                        </apex:repeat>
+                    </div>
+                </apex:outputPanel>
+            </div>
+            <div class="block left" style="padding-top:8px;">
+                <b>Certifications:</b>
+                <apex:outputPanel rendered="{!resumeDetails.certificationDetails.size > 0}">
+                    <div class="block left">
+                        <apex:repeat value="{!resumeDetails.certificationDetails}" var="cert">
+                            • <apex:outputText value="{!cert.certificationName}"/>
+                            <apex:outputText rendered="{!NOT(ISBLANK(cert.issuer))}"> — {!cert.issuer}</apex:outputText>
+                            <apex:outputText rendered="{!NOT(ISBLANK(cert.dateAchieved))}">
+                                &nbsp;(
+                                <apex:outputText value="{0,date,MMM yyyy}">
+                                    <apex:param value="{!cert.dateAchieved}"/>
+                                </apex:outputText>
+                                )
+                            </apex:outputText>
+                            <br/>
+                        </apex:repeat>
+                    </div>
+                </apex:outputPanel>
+            </div>
+        </div>
+
+        <hr class="hr"/>
+
+        <apex:outputPanel rendered="{!NOT(ISBLANK(resumeDetails.highlights))}">
+            <div class="section center">
+                <b>HIGHLIGHTS</b><br/>
+                <div class="block left">
+                    <apex:outputText value="{!resumeDetails.highlights}" escape="false"/>
+                </div>
+            </div>
+        </apex:outputPanel>
+
+        <hr class="hr"/>
+
+        <apex:outputPanel rendered="{!resumeDetails.workExperienceDetails.size > 0}">
+            <div class="section center">
+                <b>WORK EXPERIENCE</b><br/>
+                <div class="block left">
+                    <apex:repeat value="{!resumeDetails.workExperienceDetails}" var="exp">
+                        <div>
+                            <b>{!exp.company}</b>
+                            <apex:outputText rendered="{!NOT(ISBLANK(exp.location))}"> / {!exp.location}</apex:outputText><br/>
+                            <i>{!exp.role}</i>
+                            <apex:outputText> / </apex:outputText>
+
+                            <apex:outputText rendered="{!NOT(ISBLANK(exp.fromDate))}">
+                                <apex:outputText value="{0,date,MMM yyyy}">
+                                    <apex:param value="{!exp.fromDate}"/>
+                                </apex:outputText>
+                            </apex:outputText>
+
+                            <apex:outputText> - </apex:outputText>
+
+                            <apex:outputText rendered="{!NOT(ISBLANK(exp.toDate))}">
+                                <apex:outputText value="{0,date,MMM yyyy}">
+                                    <apex:param value="{!exp.toDate}"/>
+                                </apex:outputText>
+                            </apex:outputText>
+                            <apex:outputText rendered="{!ISBLANK(exp.toDate)}">Present</apex:outputText>
+                            <br/>
+
+                            <apex:outputText value="{!exp.responsibilities}" escape="false"/><br/><br/>
+                        </div>
+                    </apex:repeat>
+                </div>
+            </div>
+        </apex:outputPanel>
+
+        <hr class="hr"/>
+
+        <apex:outputPanel rendered="{!resumeDetails.educationDetails.size > 0}">
+            <div class="section center">
+                <b>EDUCATION</b><br/>
+                <div class="block left">
+                    <apex:repeat value="{!resumeDetails.educationDetails}" var="ed">
+                        <div>
+                            <b>{!ed.degreeType}</b><br/>
+                            <div>
+                                <i>School:</i> {!ed.institutionName} <br/>
+                                <i>Field of Study:</i> {!ed.fieldOfStudy} <br/>
+                                <i>Completed:</i>
+                                <apex:outputText rendered="{!NOT(ISBLANK(ed.dateAchieved))}">
+                                    <apex:outputText value="{0,date,MMM yyyy}">
+                                        <apex:param value="{!ed.dateAchieved}"/>
+                                    </apex:outputText>
+                                </apex:outputText>
+                            </div>
+                        </div>
+                        <br/>
+                    </apex:repeat>
+                </div>
+            </div>
+        </apex:outputPanel>
+
+        <hr class="hr"/>
+
+        <apex:outputPanel rendered="{!NOT(ISBLANK(resumeDetails.coverLetter))}">
+            <div class="section center">
+                <b>COVER LETTER</b><br/>
+                <div class="block left">
+                    <apex:outputText value="{!resumeDetails.coverLetter}" escape="false"/>
+                </div>
+            </div>
+        </apex:outputPanel>
+
+    </div>
+</apex:page>
+-->

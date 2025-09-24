@@ -1,0 +1,143 @@
+<template>
+    <div class="slds-p-top_small">
+        <template if:true={hasResumeId}>
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>     
+
+            <template if:true={resumeDetails}>
+                <div class="slds-m-top_medium">
+                    <lightning-card title={resumeDetails.resumeName} icon-name="standard:document_preview" variant = "narrow"> 
+                        <div class="slds-p-around_medium">
+                            
+                            <div class="slds-text-heading_large slds-text-align_center slds-m-bottom_small">
+                                {resumeDetails.applicantName}
+                            </div>
+
+                            
+                            <div class="slds-text-heading_medium slds-text-align_center slds-m-bottom_small">
+                                {resumeDetails.applicantEmail} | {resumeDetails.applicantMobilePhone} | {resumeDetails.applicantCity}, {resumeDetails.applicantState}
+                            </div>
+
+                            
+                            <hr class="slds-m-around_small"></hr>
+                            
+                            
+                            <template if:true={resumeDetails.summary}>
+                                <div class="slds-text-heading_small slds-m-around_medium slds-p-around_small slds-text-align_center">
+                                    <b>SUMMARY</b></br>
+                                    <div class="slds-text-heading_small slds-m-around_small slds-text-align_left">
+                                        <lightning-formatted-text value={resumeDetails.summary}> 
+                                        </lightning-formatted-text>
+                                    </div>
+                                </div>
+                            </template>
+
+                            
+                            <hr class="slds-m-around_small"></hr>
+
+                            
+                            <div class="slds-text-heading_small slds-m-around_medium slds-p-around_small slds-text-align_center">
+                                <b>SKILLS AND CERTIFICATIONS</b>
+                                <div class="slds-text-heading_small slds-m-around_small slds-text-align_left">
+                                    <b>Skills:</b>
+                                        <template if:true={resumeDetails.skillDetails}>
+                                            <div class="slds-text-heading_small slds-m-around_small slds-text-align_left">
+                                                {SkillsString}
+                                            </div>
+                                        </template>                            
+                                </div>
+                                <div class="slds-text-heading_small slds-m-around_small slds-p-top_medium slds-text-align_left">
+                                    <b>Certifications:</b>
+                                        <template if:true={resumeDetails.certificationDetails}>
+                                            <div class="slds-text-heading_small slds-m-around_small slds-text-align_left">
+                                                {CertificationsString}
+                                            </div>
+                                        </template>                            
+                                </div>
+                            </div>
+
+                            
+                            <hr class="slds-m-around_small"></hr>
+
+                            
+                            <template if:true={resumeDetails.highlights}>
+                                <div class="slds-text-heading_small slds-m-around_medium slds-p-around_medium slds-text-align_center">
+                                    <b>HIGHLIGHTS</b></br>
+                                        <div class="slds-text-heading_small slds-m-around_small slds-text-align_left" >
+                                            <lightning-formatted-rich-text value={resumeDetails.highlights}>
+                                            </lightning-formatted-rich-text>
+                                        </div>
+                                </div>
+                            </template>
+
+                            
+                            <hr class="slds-m-around_small"></hr>
+
+                            
+                            <template if:true={resumeDetails.workExperienceDetails}>
+                                <div class="slds-text-heading_small slds-m-around_medium slds-p-around_medium slds-text-align_center">
+                                    <b>WORK EXPERIENCE</b></br>
+                                        <div class="slds-text-heading_small slds-m-around_small slds-text-align_left">
+                                            <template for:each={resumeDetails.workExperienceDetails} for:item="exp">
+                                                <div key={exp.id}> 
+                                                    <b>{exp.company} </b> / {exp.location} </br> 
+                                                    <i>{exp.role}</i> / {exp.fromDate} - 
+                                                    
+                                                    <template if:true={exp.toDate}>
+                                                        {exp.toDate}
+                                                    </template>
+                                                    <template if:false={exp.toDate}>
+                                                        &nbsp;Present
+                                                    </template>
+                                                    <lightning-formatted-rich-text value={exp.responsibilities}>
+                                                    </lightning-formatted-rich-text>
+                                                </div>
+                                            </template>
+                                        </div>
+                                </div>
+                            </template>
+
+                            
+                            <hr class="slds-m-around_small"></hr>
+
+                            
+                            <template if:true={resumeDetails.educationDetails}>
+                                <div class="slds-text-heading_small slds-m-around_medium slds-p-around_medium slds-text-align_center">
+                                    <b>EDUCATION</b></br>
+                                        <div class="slds-text-heading_small slds-m-around_small slds-text-align_left">
+                                            <template for:each={resumeDetails.educationDetails} for:item="ed">
+                                                <div key={ed.id}> <b>{ed.degreeType}</b> </br> 
+                                                    <div>
+                                                        <i>School:</i> {ed.institutionName} </br>
+                                                        <i>Field of Study:</i> {ed.fieldOfStudy} </br>
+                                                        <i>Completed:</i> {ed.dateAchieved}
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                </div>
+                            </template>
+
+                            
+                            <hr class="slds-m-around_small"></hr>
+
+                            <template if:true={resumeDetails.coverLetter}>
+                                <div class="slds-text-heading_small slds-m-around_medium slds-p-around_medium slds-text-align_center">
+                                    <b>COVER LETTER</b></br>
+                                        <div class="slds-text-heading_small slds-m-around_small slds-text-align_left">
+                                            <lightning-formatted-rich-text value={resumeDetails.coverLetter}>
+                                            </lightning-formatted-rich-text>
+                                        </div>
+                                </div>
+                            </template>
+
+                        </div>
+                    </lightning-card>
+                </div>
+            </template>            
+
+
+    </template>
+    </div>
+</template>

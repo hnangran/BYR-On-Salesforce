@@ -1,0 +1,113 @@
+<template>
+
+    <!-- Loading overlay -->
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    
+    <lightning-card title="Resume Editor" icon-name="standard:article" variant="narrow">
+        <div class="slds-grid slds-wrap slds-p-around_medium"> 
+
+            <!--Banner indicating whether user is in edit or create mode -->
+            <template if:true={isEditMode}>
+                <div class="slds-notify slds-notify_alert slds-theme_info slds-m-bottom_small" role="status">
+                    <span class="slds-assistive-text">info</span>
+                    <h2 class="slds-truncate">
+                        Editing resume
+                        <template if:true={resumeName}>— {resumeName}</template>
+                        <template if:true={resumeId}>&nbsp;({resumeId})</template>
+                    </h2>
+                </div>
+            </template>
+            <template if:false={isEditMode}>
+                <div class="slds-notify slds-notify_alert slds-theme_success slds-m-bottom_small" role="status">
+                    <span class="slds-assistive-text">success</span>
+                    <h2 class="slds-truncate">Creating a new resume</h2>
+                </div>
+            </template>            
+
+            <!--This section shows a path component to guide the user through the process-->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 slds-p-around_medium">
+                <lightning-progress-indicator 
+                        current-step={currentStep} 
+                        type="path"
+                        variant="base"
+                        has-error={hasStepError}
+                        onstepfocus={handleStepFocus}
+                        onstepclick={handleStepClick}>
+                    <lightning-progress-step label="Basic Information" value="basic"></lightning-progress-step>
+                    <lightning-progress-step label="Education" value="education"></lightning-progress-step>
+                    <lightning-progress-step label="Work Experience" value="work"></lightning-progress-step>
+                    <lightning-progress-step label="Skills" value="skills"></lightning-progress-step>
+                    <lightning-progress-step label="Certifications" value="certs"></lightning-progress-step>
+                    <lightning-progress-step label="Review & Save" value="review"></lightning-progress-step>
+                </lightning-progress-indicator>
+            </div>
+        </div>
+
+        <!--render each step as a sub-lwc conditionally-->
+        <div class="slds-p-horizontal_medium slds-p-bottom_large">
+
+            <!--Display the Basic Info step-->
+            <template if:true={isStepBasic}>
+                <!--
+                <c-byros-resumestepbasicinfo 
+                        resume-id={resumeId} 
+                        onstepvalidity={handleStepValidity} 
+                        onsave={handleChildSave}
+                        onerror={handleChildError}>
+                </c-byros-resumestepbasicinfo>
+                -->
+            </template>
+        
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="slds-p-around_medium slds-border_top">
+            <div class="slds-grid slds-gutters slds-wrap slds-align_absolute-center">
+                <lightning-button
+                    class="slds-m-right_small"
+                    variant="neutral"
+                    label="Back"
+                    title="Back"
+                    onclick={handleBack}
+                    disabled={isFirstStep}
+                ></lightning-button>
+                
+                <lightning-button
+                    class="slds-m-right_small"
+                    variant="brand-outline"
+                    label="Save"
+                    title="Save"
+                    onclick={handleSave}
+                    disabled={disableSave}
+                ></lightning-button>
+
+                <template if:false={isLastStep}>
+                    <lightning-button
+                        variant="brand"
+                        label="Save & Next"
+                        title="Save and go to next step"
+                        onclick={handleSaveAndNext}
+                        disabled={disableSaveAndNext}
+                    ></lightning-button>
+                </template>
+
+                <template if:true={isLastStep}>
+                    <lightning-button
+                        variant="brand"
+                        label="Finalize & Save"
+                        title="Finalize and save"
+                        onclick={handleFinalize}
+                        disabled={disableFinalize}
+                    ></lightning-button>
+                </template>                
+            </div>
+        </div>        
+
+    </lightning-card>
+
+    <!-- Toast messages surface -->
+    <lightning-messages></lightning-messages>
+        
+</template>

@@ -1,0 +1,24 @@
+<template>
+
+    <c-selectresume onprofilechange={handleProfileChange} 
+                    onresumechange={handleResumeChange}
+                    ondisplayresume={handleDisplayResume}>
+    </c-selectresume>
+    
+    <!-- Optional placeholder when hidden -->
+    <template if:false={showDetails}>
+        <div class="slds-m-top_medium">
+            <lightning-card title="Resume Selected:" icon-name="utility:preview">
+                <div class="slds-p-around_small slds-text-color_weak">
+                Pick a profile and resume to see details.
+                </div>
+            </lightning-card>
+        </div>
+    </template>
+
+    <template if:true={showDetails}>
+        <p> Display Resume {selectedResumeId} </p>
+        <c-displayresume resume-id={selectedResumeId}></c-displayresume>
+    </template>
+
+</template>
