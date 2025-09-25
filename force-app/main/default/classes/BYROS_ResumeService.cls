@@ -30,11 +30,6 @@ public with sharing class BYROS_ResumeService {
 
         System.debug('Exiting ResumeService.getProfiles ' + profiles);
 
-        ProfileList profile = new ProfileList();
-        profile.label = 'Dummy';
-        profile.value = 'Dummy';
-        profiles.add(profile);
-
         return profiles;
     }
 
@@ -83,6 +78,7 @@ public with sharing class BYROS_ResumeService {
         }
     }
 
+    
     // Class to hold detailed resume information
     public class ResumeDetails {
 

@@ -1,183 +1,131 @@
-<apex:page ></apex:page>
-<!--
-<apex:page controller="BYROS_ResumePDFController"
+<apex:page
+    standardController="Resume__c"
+    extensions="BYROS_ResumePDFController"
     renderAs="pdf"
-    contentType="application/pdf#{!fileName}"
     showHeader="false"
     sidebar="false"
-    title="{!resumeDetails.applicantName} - Resume">
+    applyBodyTag="false"
+    cache="false">
 
+    <!-- Minimal inline “SLDS-like” spacing/typography -->
     <style>
-        .container { max-width: 900px; margin: 24px auto; }
-        .h-large { font-size: 22px; text-align: center; margin-bottom: 8px; }
-        .h-medium { font-size: 16px; text-align: center; margin-bottom: 8px; }
-        .section { font-size: 13px; margin: 12px 16px; padding: 8px; }
+        .wrap { padding: 16px 20px; }
+        .title { font-size: 22px; font-weight: 700; text-align: center; margin: 8px 0 12px; }
+        .sub { font-size: 14px; text-align: center; margin: 0 0 12px; }
+        .hr { border: 0; border-top: 1px solid #ddd; margin: 12px 0; }
+        .section { font-size: 14px; margin: 12px 0; }
+        .heading { 
+            font-weight: bold;        /* bold */
+            text-align: center;      /* centered */
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        .content { font-size: 12px; margin: 8px 0; }
         .left { text-align: left; }
-        .center { text-align: center; }
-        .block { margin: 8px 12px; }
-        .hr { border: 0; border-top: 1px solid #d8dde6; margin: 8px; }
-        .preserve-lines { white-space: pre-line; } /* mimic lightning-formatted-text */
-        b { font-weight: 700; }
-        i { font-style: italic; }
+        .avoid-break { page-break-inside: avoid; }
     </style>
 
-<apex:outputPanel layout="block" style="font-size:11px;color:#54698d;margin:8px 0">
-  <b>DEBUG</b> — resumeId: <code>{!resumeId}</code>
-  • profileName: <code>{!resumeDetails.profileName}</code>
-  • resumeName: <code>{!resumeDetails.resumeName}</code>
-  • skills: <code>{!resumeDetails.skillDetails.size}</code>
-  • certs: <code>{!resumeDetails.certificationDetails.size}</code>
-  • work: <code>{!resumeDetails.workExperienceDetails.size}</code>
-  • edu: <code>{!resumeDetails.educationDetails.size}</code>
-</apex:outputPanel>
-<apex:pageMessages />    
 
-    <div class="container">
-
-        <div class="h-large">{!resumeDetails.applicantName}</div>
-
-        <div class="h-medium">
-            {!resumeDetails.applicantEmail}
-            <apex:outputText rendered="{!NOT(ISBLANK(resumeDetails.applicantMobilePhone))}">
-                | {!resumeDetails.applicantMobilePhone}
-            </apex:outputText>
-            <apex:outputText rendered="{!OR(NOT(ISBLANK(resumeDetails.applicantCity)), NOT(ISBLANK(resumeDetails.applicantState)))}">
-                | {!resumeDetails.applicantCity}
-                <apex:outputText rendered="{!AND(NOT(ISBLANK(resumeDetails.applicantCity)), NOT(ISBLANK(resumeDetails.applicantState)))}">, </apex:outputText>
-                {!resumeDetails.applicantState}
-            </apex:outputText>
+    <div class="wrap">
+        <!-- Applicant header (name + contact line) -->
+        <div class="title" align="center" 
+                style="font-weight: bold; padding-top: 5px; padding-bottom: 5px;">{!applicantName}</div>
+        <div class="sub" align="center"
+                style="padding-top: 5px; padding-bottom: 5px;">
+            {!applicantEmail} | {!applicantMobilePhone} | {!applicantCity}, {!applicantState}
         </div>
 
         <hr class="hr"/>
 
-        <apex:outputPanel rendered="{!NOT(ISBLANK(resumeDetails.summary))}">
-            <div class="section center">
-                <b>SUMMARY</b><br/>
-                <div class="block left preserve-lines">
-                    <apex:outputText value="{!resumeDetails.summary}" />
-                </div>
+        <!-- SUMMARY -->
+        <apex:outputPanel rendered="{!NOT(ISBLANK(summary))}" layout="block" styleClass="section avoid-break">
+            <div class="heading" align="center" 
+                    style="font-weight: bold; padding-top: 5px; padding-bottom: 5px;">SUMMARY</div>
+            <div class="content left" style="padding-top: 5px; padding-bottom: 5px;">
+                <apex:outputText value="{!summary}" escape="true"/>
             </div>
         </apex:outputPanel>
 
         <hr class="hr"/>
 
-        <div class="section center">
-            <b>SKILLS AND CERTIFICATIONS</b>
-            <div class="block left">
-                <b>Skills:</b>
-                <apex:outputPanel rendered="{!resumeDetails.skillDetails.size > 0}">
-                    <div class="block left">
-                        <apex:repeat value="{!resumeDetails.skillDetails}" var="sk">
-                            • <apex:outputText value="{!sk.skillName}"/><br/>
-                        </apex:repeat>
-                    </div>
-                </apex:outputPanel>
-            </div>
-            <div class="block left" style="padding-top:8px;">
-                <b>Certifications:</b>
-                <apex:outputPanel rendered="{!resumeDetails.certificationDetails.size > 0}">
-                    <div class="block left">
-                        <apex:repeat value="{!resumeDetails.certificationDetails}" var="cert">
-                            • <apex:outputText value="{!cert.certificationName}"/>
-                            <apex:outputText rendered="{!NOT(ISBLANK(cert.issuer))}"> — {!cert.issuer}</apex:outputText>
-                            <apex:outputText rendered="{!NOT(ISBLANK(cert.dateAchieved))}">
-                                &nbsp;(
-                                <apex:outputText value="{0,date,MMM yyyy}">
-                                    <apex:param value="{!cert.dateAchieved}"/>
-                                </apex:outputText>
-                                )
-                            </apex:outputText>
-                            <br/>
-                        </apex:repeat>
-                    </div>
-                </apex:outputPanel>
-            </div>
+        <!-- SKILLS & CERTIFICATIONS -->
+        <div class="section avoid-break">
+            <div class="heading" align="center"
+                    style="font-weight: bold; padding-top: 5px; padding-bottom: 5px;">SKILLS AND CERTIFICATIONS</div>
+
+            <div class="content left" style="padding-top: 5px; padding-bottom: 5px;"><b>Skills:</b></div>
+            <apex:outputPanel rendered="{!NOT(ISBLANK(skillsString))}" layout="block" styleClass="content left">
+                <apex:outputText value="{!skillsString}" escape="true"/>
+            </apex:outputPanel>
+
+            <div class="content left" style="padding-top: 5px; padding-bottom: 5px;"><b>Certifications:</b></div>
+            <apex:outputPanel rendered="{!NOT(ISBLANK(certificationsString))}" layout="block" styleClass="content left">
+                <apex:outputText value="{!certificationsString}" escape="true"/>
+            </apex:outputPanel>
         </div>
 
         <hr class="hr"/>
 
-        <apex:outputPanel rendered="{!NOT(ISBLANK(resumeDetails.highlights))}">
-            <div class="section center">
-                <b>HIGHLIGHTS</b><br/>
-                <div class="block left">
-                    <apex:outputText value="{!resumeDetails.highlights}" escape="false"/>
-                </div>
+        <!-- HIGHLIGHTS (rich text) -->
+        <apex:outputPanel rendered="{!NOT(ISBLANK(highlightsHtml))}" layout="block" styleClass="section avoid-break">
+            <div class="heading" align="center" 
+                    style="font-weight: bold; padding-top: 5px; padding-bottom: 5px;">HIGHLIGHTS</div>
+            <div class="content left">
+                <apex:outputText value="{!highlightsHtml}" escape="false"/>
             </div>
         </apex:outputPanel>
 
         <hr class="hr"/>
 
-        <apex:outputPanel rendered="{!resumeDetails.workExperienceDetails.size > 0}">
-            <div class="section center">
-                <b>WORK EXPERIENCE</b><br/>
-                <div class="block left">
-                    <apex:repeat value="{!resumeDetails.workExperienceDetails}" var="exp">
+        <!-- WORK EXPERIENCE -->
+        <apex:outputPanel rendered="{!NOT(ISBLANK(workExperienceDetails))}" layout="block" styleClass="section">
+            <div class="heading" align="center" 
+                    style="font-weight: bold; padding-top: 5px; padding-bottom: 5px;">WORK EXPERIENCE</div>
+            <div class="content left">
+                <apex:repeat value="{!workExperienceDetails}" var="exp">
+                    <div class="avoid-break" style="margin-bottom:10px;">
+                        <b><apex:outputText value="{!exp.company}"/></b>
+                        &nbsp;/&nbsp;<apex:outputText value="{!exp.location}"/><br/>
+                        <i><apex:outputText value="{!exp.role}"/></i>
+                        &nbsp;/&nbsp;<apex:outputText value="{!exp.fromDate}"/>
+                        &nbsp;-&nbsp;<apex:outputText value="{!exp.toDate}"/><br/>
+                        <apex:outputText value="{!exp.responsibilities}" escape="false"/>
+                    </div>
+                </apex:repeat>
+            </div>
+        </apex:outputPanel>
+
+        <hr class="hr"/>
+
+        <!-- EDUCATION -->
+        <apex:outputPanel rendered="{!NOT(ISBLANK(educationDetails))}" layout="block" styleClass="section">
+            <div class="heading" align="center"
+                    style="font-weight: bold; padding-top: 5px; padding-bottom: 5px;">EDUCATION</div>
+            <div class="content left">
+                <apex:repeat value="{!educationDetails}" var="ed">
+                    <div class="avoid-break" 
+                            style="padding-top: 5px; padding-bottom: 5px;">
+                        <b><apex:outputText value="{!ed.degreeType}"/></b><br/>
                         <div>
-                            <b>{!exp.company}</b>
-                            <apex:outputText rendered="{!NOT(ISBLANK(exp.location))}"> / {!exp.location}</apex:outputText><br/>
-                            <i>{!exp.role}</i>
-                            <apex:outputText> / </apex:outputText>
-
-                            <apex:outputText rendered="{!NOT(ISBLANK(exp.fromDate))}">
-                                <apex:outputText value="{0,date,MMM yyyy}">
-                                    <apex:param value="{!exp.fromDate}"/>
-                                </apex:outputText>
-                            </apex:outputText>
-
-                            <apex:outputText> - </apex:outputText>
-
-                            <apex:outputText rendered="{!NOT(ISBLANK(exp.toDate))}">
-                                <apex:outputText value="{0,date,MMM yyyy}">
-                                    <apex:param value="{!exp.toDate}"/>
-                                </apex:outputText>
-                            </apex:outputText>
-                            <apex:outputText rendered="{!ISBLANK(exp.toDate)}">Present</apex:outputText>
-                            <br/>
-
-                            <apex:outputText value="{!exp.responsibilities}" escape="false"/><br/><br/>
+                            <i>School:</i> <apex:outputText value="{!ed.institutionName}"/><br/>
+                            <i>Field of Study:</i> <apex:outputText value="{!ed.fieldOfStudy}"/><br/>
+                            <i>Completed:</i> <apex:outputText value="{!ed.dateAchieved}"/>
                         </div>
-                    </apex:repeat>
-                </div>
+                    </div>
+                </apex:repeat>
             </div>
         </apex:outputPanel>
 
         <hr class="hr"/>
 
-        <apex:outputPanel rendered="{!resumeDetails.educationDetails.size > 0}">
-            <div class="section center">
-                <b>EDUCATION</b><br/>
-                <div class="block left">
-                    <apex:repeat value="{!resumeDetails.educationDetails}" var="ed">
-                        <div>
-                            <b>{!ed.degreeType}</b><br/>
-                            <div>
-                                <i>School:</i> {!ed.institutionName} <br/>
-                                <i>Field of Study:</i> {!ed.fieldOfStudy} <br/>
-                                <i>Completed:</i>
-                                <apex:outputText rendered="{!NOT(ISBLANK(ed.dateAchieved))}">
-                                    <apex:outputText value="{0,date,MMM yyyy}">
-                                        <apex:param value="{!ed.dateAchieved}"/>
-                                    </apex:outputText>
-                                </apex:outputText>
-                            </div>
-                        </div>
-                        <br/>
-                    </apex:repeat>
-                </div>
-            </div>
-        </apex:outputPanel>
-
-        <hr class="hr"/>
-
-        <apex:outputPanel rendered="{!NOT(ISBLANK(resumeDetails.coverLetter))}">
-            <div class="section center">
-                <b>COVER LETTER</b><br/>
-                <div class="block left">
-                    <apex:outputText value="{!resumeDetails.coverLetter}" escape="false"/>
-                </div>
+        <!-- COVER LETTER (rich text) -->
+        <apex:outputPanel rendered="{!NOT(ISBLANK(coverLetterHtml))}" layout="block" styleClass="section avoid-break">
+            <div class="heading" align="center"
+                    style="font-weight: bold; padding-top: 5px; padding-bottom: 5px;">COVER LETTER</div>
+            <div class="content left">
+                <apex:outputText value="{!coverLetterHtml}" escape="false"/>
             </div>
         </apex:outputPanel>
 
     </div>
 </apex:page>
--->

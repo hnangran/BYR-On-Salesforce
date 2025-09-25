@@ -19,8 +19,8 @@ export default class Selectresume extends LightningElement {
     //Resumes
     resumes=[];
     resumePlaceholder='Select a profile first...';
-    selectedResumeId=undefined;
-    resumeError=undefined;
+    selectedResumeId;
+    resumeError;
 
     @wire(getProfiles)
     wiredProfiles({data, error}) {
@@ -99,21 +99,8 @@ export default class Selectresume extends LightningElement {
         }
     }
 
-    async downloadPdf() {
-        if (!this.selectedResumeId) 
-            return;
-
-        const vfPath = `/apex/ResumePDFVFPage?id=${this.selectedResumeId}&download=1`;
-
-        // Build a Classic-host URL so it doesn't load inside the Lightning shell
-        const origin = window.location.origin;
-        let classicOrigin = origin;
-
-        if (origin.includes('lightning.force.com')) {
-            classicOrigin = origin.replace('lightning.force.com', 'my.salesforce.com');
-        }
-
-        const url = `${classicOrigin}${vfPath}`;
-        window.open(url, '_blank', 'noopener,noreferrer'); // PDF only loads in a new tab
+    downloadPdf() {
+        const url = '/apex/BYROS_ResumeAsPDF?id=' + this.selectedResumeId;
+        window.open(url, '_blank'); // opens PDF in new tab
     }
 }

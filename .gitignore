@@ -2,6 +2,9 @@
 # Salesforce folders
 .sf/
 .sfdx/
+
+# macOS
+.DS_Store
 .sf/orgs/00DgL000008S8NpUAK/localSourceTracking/HEAD
 .sf/orgs/00DgL000008S8NpUAK/localSourceTracking/index
 .sf/orgs/00DgL000008S8NpUAK/localSourceTracking/objects/19/a6e2aeec400f10b8cd043ab21000087a1bcd5a
