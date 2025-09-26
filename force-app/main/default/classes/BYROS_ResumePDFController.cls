@@ -54,35 +54,5 @@ public with sharing class BYROS_ResumePDFController {
         workExperienceDetails = resumeDetails.workExperienceDetails;
         educationDetails = resumeDetails.educationDetails;
 
-/*        
-        workExperienceDetails = new List<BYROS_ResumeService.WorkExperienceDetail>();
-        for(BYROS_ResumeService.WorkExperienceDetail work : resumeDetails.workExperienceDetails){
-            
-            BYROS_ResumeService.WorkExperienceDetail workVM = new BYROS_ResumeService.WorkExperienceDetail();
-            workVM.company = work.company;
-            workVM.location = work.location;
-            workVM.role = work.role;
-            workVM.fromDate = work.fromDate;
-            workVM.toDate = work.toDate;
-            workVM.toDateHtml = (work.toDate == null) ? 'Present' : String.valueOf(work.toDate);
-            workVM.responsibilities = work.responsibilities;
-            workVM.responsibilitiesHtml = work.responsibilities;
-            
-            workExperienceDetails.add(workVM);         
-        }
-
-        educationDetails = new List<BYROS_ResumeService.EducationDetail>();
-        for(BYROS_ResumeService.EducationDetail education : resumeDetails.educationDetails){
-
-            BYROS_ResumeService.EducationDetail educationVM = new BYROS_ResumeService.EducationDetail();
-            educationVM.id = education.id;
-            educationVM.degreeType = education.degreeType;
-            educationVM.institutionName = education.institutionName;
-            educationVM.fieldOfStudy = education.fieldOfStudy;
-            educationVM.dateAchieved = education.dateAchieved;
-
-            educationDetails.add(educationVM);
-        }
-*/
     }
 }
