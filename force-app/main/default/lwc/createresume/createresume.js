@@ -12,17 +12,7 @@ export default class Createresume extends LightningElement {
     disableSave=true;
     disableSaveAndNext=true;
     disableFinalize=true;
-
-    //variables to hold the state of each step
-    //isFirstStep=true; //start on the basic info step, which is always the first step
-    //isLastStep=false;
-
-    //isStepBasic=true;
-    //isStepEducation=false;
-    //isStepWork=false;
-    //isStepSkills=false;
-    //isStepCerts=false;
-    //isSteReview=false;
+    
     hasStepError=false;
 
     //currentStep='basic';

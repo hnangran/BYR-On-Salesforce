@@ -51,12 +51,10 @@
             <!--Display the Basic Info step-->
             <template if:true={isStepBasic}>
                 <!--
-                <c-byros-resumestepbasicinfo 
+                <c-byros-stepbasicinfo 
                         resume-id={resumeId} 
-                        onstepvalidity={handleStepValidity} 
-                        onsave={handleChildSave}
-                        onerror={handleChildError}>
-                </c-byros-resumestepbasicinfo>
+                        onsave={handleStepBasicSave}
+                </c-byros-stepbasicinfo>
                 -->
             </template>
         
@@ -108,6 +106,8 @@
     </lightning-card>
 
     <!-- Toast messages surface -->
-    <lightning-messages></lightning-messages>
+    <lightning-messages>
+        
+    </lightning-messages>
         
 </template>

@@ -10022,3 +10022,7 @@ node_modules/is-arrayish/package.json
 node_modules/is-arrayish/README.md
 node_modules/is-core-module/.eslintrc
 node_modules/is-core-module/.nycrc
+.amazonq/rules/memory-bank/guidelines.md
+.amazonq/rules/memory-bank/product.md
+.amazonq/rules/memory-bank/structure.md
+.amazonq/rules/memory-bank/tech.md
