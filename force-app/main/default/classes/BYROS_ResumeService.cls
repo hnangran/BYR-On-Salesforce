@@ -78,7 +78,6 @@ public with sharing class BYROS_ResumeService {
         }
     }
 
-    
     // Class to hold detailed resume information
     public class ResumeDetails {
 

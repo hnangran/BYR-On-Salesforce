@@ -50,14 +50,34 @@
 
             <!--Display the Basic Info step-->
             <template if:true={isStepBasic}>
-                <!--
-                <c-byros-stepbasicinfo 
-                        resume-id={resumeId} 
-                        onsave={handleStepBasicSave}
-                </c-byros-stepbasicinfo>
-                -->
+                <c-resumestepbasicinfo></c-resumestepbasicinfo>
             </template>
-        
+
+            <!--Display the Education step-->
+            <template if:true={isStepEducation}>
+                <p>Education Step</p>
+            </template>
+
+            <!--Display the Work Experience step-->
+            <template if:true={isStepWork}>
+                <p>Work Exp Step</p>
+            </template>
+
+            <!--Display the Skills step-->
+            <template if:true={isStepSkills}>
+                <p>Skills Step</p>
+            </template>
+
+            <!--Display the Certifications step-->
+            <template if:true={isStepCerts}>
+                <p>Certs Step</p>
+            </template>
+
+            <!--Display the Review & Save step-->
+            <template if:true={isStepReview}>
+                <p>Review Step</p>
+            </template>
+
         </div>
 
         <!-- Footer Actions -->

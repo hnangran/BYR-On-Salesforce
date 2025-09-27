@@ -82,7 +82,7 @@ private class BYROS_ResumeServiceTest {
     static void testGetProfiles() {
         //Test coverage for getProfiles
         Test.startTest();
-        List<ResumeService.ProfileList> profileList = ResumeService.getProfiles();
+        List<BYROS_ResumeService.ProfileList> profileList = BYROS_ResumeService.getProfiles();
         System.debug('Inside ResumeServiceTest.testGetProfiles, Testing coverage for getProfiles ' + profileList);
         Test.stopTest();
 

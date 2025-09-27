@@ -1,51 +1,6 @@
 <template>
 
-    <!-- Surface messages from record-edit-form -->
-    <lightning-messages></lightning-messages>
-
     <lightning-card title="Basic Information" icon-name="standard:contact" variant="narrow">
-        <div class="slds-p-around_medium">
-            <!-- Resume form -->
-            <lightning-record-edit-form
-                object-api-name="Resume__c"
-                record-id={resumeId}
-                onsuccess={handleResumeSuccess}
-                onsubmit={handleResumeSubmit}
-                onerror={handleResumeError}
-            >
-                <!-- Required Name field -->
-                <div class="slds-m-bottom_small slds-align_absolute-center">
-                    <lightning-input-field field-name="Name" required></lightning-input-field>
-                </div>
 
-                <!-- Profile lookup + New Profile button in same row -->
-                <div class="slds-grid slds-m-bottom_small slds-align_absolute-center">
-                    <div class="slds-col">
-                        <!-- Assumes lookup field API name is Profile__c on Resume__c -->
-                        <lightning-input-field
-                            field-name="Profile__c"
-                            required
-                        ></lightning-input-field>
-                    </div>
-                    <div class="slds-col slds-p-top_small slds-p-left_large">
-                        <lightning-button
-                            variant="brand-outline"
-                            label="New Profile"
-                        ></lightning-button>
-                    </div>
-                </div>
-
-                <!-- Required Summary field -->
-                <div class="slds-m-bottom_small slds-align_absolute-center">
-                    <lightning-input-field field-name="Summary__c" required></lightning-input-field>
-                </div>
-                
-                <!-- Required Highlights field -->
-                <div class="slds-m-bottom_small slds-align_absolute-center">
-                    <lightning-input-field field-name="Highlights__c" required></lightning-input-field>
-                </div>
-                
-            </lightning-record-edit-form>            
-        </div>    
     </lightning-card>
 </template>

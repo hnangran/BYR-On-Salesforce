@@ -1,5 +1,4 @@
-<apex:page
-    standardController="Resume__c"
+<apex:page standardController="Resume__c"
     extensions="BYROS_ResumePDFController"
     renderAs="pdf"
     showHeader="false"
