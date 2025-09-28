@@ -5,8 +5,8 @@
         <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
     </template>
         
-    <lightning-card title="Resume Editor" icon-name="standard:article" variant="narrow">
-        <div class="slds-grid slds-wrap slds-p-around_medium"> 
+    <lightning-card title="Resume Wizard" icon-name="standard:article" variant="narrow">
+        <div class="slds-p-horizontal_medium slds-p-vertical_small"> 
 
             <!--Banner indicating whether user is in edit or create mode -->
             <template if:true={isEditMode}>
@@ -33,14 +33,13 @@
                         type="path"
                         variant="base"
                         has-error={hasStepError}
-                        onstepfocus={handleStepFocus}
-                        onstepclick={handleStepClick}>
+                        onchange={handleStepChange}>
                     <lightning-progress-step label="Basic Information" value="basic"></lightning-progress-step>
                     <lightning-progress-step label="Education" value="education"></lightning-progress-step>
                     <lightning-progress-step label="Work Experience" value="work"></lightning-progress-step>
                     <lightning-progress-step label="Skills" value="skills"></lightning-progress-step>
                     <lightning-progress-step label="Certifications" value="certs"></lightning-progress-step>
-                    <lightning-progress-step label="Review & Save" value="review"></lightning-progress-step>
+                    <lightning-progress-step label="Review & Finish" value="review"></lightning-progress-step>
                 </lightning-progress-indicator>
             </div>
         </div>
@@ -50,34 +49,58 @@
 
             <!--Display the Basic Info step-->
             <template if:true={isStepBasic}>
-                <c-resumestepbasicinfo></c-resumestepbasicinfo>
+                <c-basicinfostep 
+                    resume-id={resumeId}
+                    onsubmit={handleFormSubmit}
+                    onsuccess={handleFormSuccess}
+                    onerror={handleFormError}>
+                </c-basicinfostep>
             </template>
 
             <!--Display the Education step-->
             <template if:true={isStepEducation}>
-                <p>Education Step</p>
+                <c-educationstep 
+                    resume-id={resumeId}
+                    onsuccess={handleFormSuccess}
+                    onerror={handleFormError}>
+                </c-educationstep>
             </template>
 
             <!--Display the Work Experience step-->
             <template if:true={isStepWork}>
-                <p>Work Exp Step</p>
+                <c-workexperiencestep 
+                    resume-id={resumeId}
+                    onsuccess={handleFormSuccess}
+                    onerror={handleFormError}>
+                </c-workexperiencestep>
             </template>
 
             <!--Display the Skills step-->
             <template if:true={isStepSkills}>
-                <p>Skills Step</p>
+                <c-skillsstep 
+                    resume-id={resumeId}
+                    onsuccess={handleFormSuccess}
+                    onerror={handleFormError}>
+                </c-skillsstep>
             </template>
 
             <!--Display the Certifications step-->
             <template if:true={isStepCerts}>
-                <p>Certs Step</p>
+                <c-certsstep 
+                    resume-id={resumeId}
+                    onsuccess={handleFormSuccess}
+                    onerror={handleFormError}>
+                </c-certsstep>
             </template>
 
             <!--Display the Review & Save step-->
             <template if:true={isStepReview}>
-                <p>Review Step</p>
+                <c-reviewandfinishstep 
+                    resume-id={resumeId}
+                    onsuccess={handleFormSuccess}
+                    onerror={handleFormError}>
+                </c-reviewandfinishstep>
             </template>
-
         </div>
 
         <!-- Footer Actions -->
@@ -92,32 +115,30 @@
                     disabled={isFirstStep}
                 ></lightning-button>
                 
-                <lightning-button
-                    class="slds-m-right_small"
-                    variant="brand-outline"
-                    label="Save"
-                    title="Save"
-                    onclick={handleSave}
-                    disabled={disableSave}
-                ></lightning-button>
-
                 <template if:false={isLastStep}>
+                    <lightning-button
+                        class="slds-m-right_small"
+                        variant="brand-outline"
+                        label="Next"
+                        title="Next"
+                        onclick={handleNext}
+                    ></lightning-button>
+                
                     <lightning-button
                         variant="brand"
                         label="Save & Next"
                         title="Save and go to next step"
                         onclick={handleSaveAndNext}
-                        disabled={disableSaveAndNext}
+                        disabled={isLastStep}
                     ></lightning-button>
                 </template>
 
                 <template if:true={isLastStep}>
                     <lightning-button
                         variant="brand"
-                        label="Finalize & Save"
-                        title="Finalize and save"
-                        onclick={handleFinalize}
-                        disabled={disableFinalize}
+                        label="Finish"
+                        title="Finish"
+                        onclick={handleFinish}
                     ></lightning-button>
                 </template>                
             </div>
@@ -127,7 +148,13 @@
 
     <!-- Toast messages surface -->
     <lightning-messages>
-        
+        <template if:true={toastMessage}>
+            <div class="slds-notify slds-notify_toast slds-theme_{toastSeverity}
+                slds-notify_alert slds-theme_{toastSeverity} slds-m-bottom_small" role="status">
+                <span class="slds-assistive-text">{toastSeverity}</span>
+                <h2 class="slds-truncate">{toastMessage}</h2>
+            </div>
+        </template>
     </lightning-messages>
         
 </template>

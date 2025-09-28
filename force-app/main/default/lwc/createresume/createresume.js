@@ -5,20 +5,11 @@ const STEPS = ['basic', 'education', 'work', 'skills', 'certs', 'review'];
 
 export default class Createresume extends LightningElement {
     
-    //state variables
-    @track isLoading=false;
-    @track stepIndex = 0;            // start at "basic"
-    //isEditMode=false;
-    disableSave=true;
-    disableSaveAndNext=true;
-    disableFinalize=true;
-    
-    hasStepError=false;
-
-    //currentStep='basic';
-
     @api resumeId; // Store the resume ID
-    resumeName;
+    @track stepIndex = 0;            // start at "basic"
+    advanceAfterSubmit=false;
+
+    isLoading=false;
     
     get isEditMode() { return !!this.resumeId; }
     get currentStep() { return STEPS[this.stepIndex]; }
@@ -33,105 +24,92 @@ export default class Createresume extends LightningElement {
     get isStepCerts() { return this.currentStep === 'certs';}
     get isStepReview()    { return this.currentStep === 'review'; }
 
-    handleStepClick(evt){
-        const value = evt?.detail?.value;
-        if (!value) return;
+    //Path click
+    handleStepChange(e){
+        const value = event?.detail?.value;
         const idx = STEPS.indexOf(value);
-        if (idx >= 0) this.stepIndex = idx;        
-    }
+        if (idx !== -1) {
+            this.stepIndex = idx;
+        } else {
+            console.warn('Unknown step value from path:', value);
+        }    
+}
 
-    handleStepFocus(){}
-
-    handleBack(event){
+    // Parent footer action - back
+    handleBack() {
         if (!this.isFirstStep) this.stepIndex -= 1;
     }
 
-    async handleSave(event){
-        // Ask the active child to save (child should expose @api save())
+    //parent footer action - next
+    handleNext() {
         const child = this.getActiveChild();
-        if (child?.save) {
-            child.save(); // child will emit 'save' / 'stepvalidity' / toast on its own
-        } else {
-            this.toast('Action not available', 'This step does not support parent-controlled Save.', 'warning');
-        }        
-    }
 
-    handleSaveAndNext(event){
-        // Ask the active child to save & signal 'next' on success (child should expose @api saveAndNext())
-        const child = this.getActiveChild();
-        if (child?.saveAndNext) {
-            child.saveAndNext();
-        } else if (child?.save) {
-            // Fallback: call save, and let child's onsuccess emit 'next'
-            child.save();
-        } else {
-            this.toast('Action not available', 'This step does not support Save & Next.', 'warning');
-        }        
-    }
-
-    handleFinalize(event){
-        // Finalize action on Review step (e.g., ensure everything valid, then persist anything pending)
-        if (!this.isStepReview) {
-            this.toast('Not on Review', 'Go to Review to finalize.', 'warning');
+        if (!child?.validate() ) 
             return;
-        }
-        try {
-            this.isLoading = true;
-            // TODO: call an Apex finalize method if needed
-            this.toast('All set', 'Resume saved and finalized.', 'success');
-        } catch (event) {
-            this.toast('Finalize failed', this.err(event), 'error');
-        } finally {
-            this.isLoading = false;
-        }                
-    }
-    
-    handleCancel(event){
-        // Simple: navigate back or fire an event so the container decides
-        this.dispatchEvent(new CustomEvent('cancel'));        
+
+        this.advanceAfterSubmit = true;
+        child.submit();
     }
 
-    handleChildSave(event){}
-
-    handleFinalSave(event){}
-
-    handleBackToEdit(event){}
-
-    handleStepValidity(event){}
-
-    handleChildError(event){
-        this.toast('Error', event?.detail?.message || 'An error occurred', 'error');
+    handleFinish(){
+        this.toast('Complete', 'Your resume has been saved.', 'success');
     }
 
-    handleSuccess(event){
-        this.toast('Success', event?.detail?.message || 'Operation completed', 'success');
+    handleFormSubmit(e){
+          console.log('Submitting fields:', JSON.parse(JSON.stringify(e.detail.fields)));
     }
 
-    handleError(event){
-        this.toast('Error', event?.detail?.message || 'An error occurred', 'error');
+    handleFormSuccess(e){
+        const id = e?.detail?.id || this.resumeId;
+        if (id && !this.resumeId) this.resumeId = id;
+
+        this.toast('Success', 'Step saved successfully.', 'success');
+
+        if (this.advanceAfterSubmit) {
+            this.advanceAfterSubmit = false;
+            if (!this.isLastStep) this.stepIndex += 1;
+        }        
+    }
+
+    handleFormError(e){
+        const d = e?.detail;
+        const msg =
+            d?.message ||
+            d?.detail ||
+            d?.output?.errors?.[0]?.message ||
+            d?.output?.fieldErrors && Object.values(d.output.fieldErrors).flat().map(x => x.message).join('; ') ||
+            'Submission failed. Check required fields / permissions / validation rules.';
+
+        // eslint-disable-next-line no-console
+        console.error('Record edit error detail:', JSON.parse(JSON.stringify(d)));
+        this.toast('Error', msg, 'error');
+        this._advanceAfterSubmit = false;
+    }
+
+    //parent footer action - save and next
+    async handleSaveAndNext() {
+        const child = this.getActiveChild();
+
+        if (!child?.validate() ) 
+            return;
+
+        this.advanceAfterSave = true;
+        child.submit();
     }
 
     getActiveChild() {
-        if (this.isStepBasic) {
-            return this.template.querySelector('c-byros-resumestepbasicinfo');
+        switch (this.currentStep) {
+            case 'basic':     return this.template.querySelector('c-basicinfostep');
+            case 'education': return this.template.querySelector('c-educationstep');
+            case 'work':      return this.template.querySelector('c-workexperiencestep');
+            case 'skills':    return this.template.querySelector('c-skillsstep');
+            case 'certs':     return this.template.querySelector('c-certsstep');
+            case 'review':    return this.template.querySelector('c-reviewandfinishstep');
+            default:          return null;
         }
-        // Add other steps as needed
-        return null;
     }
 
-    toast(title, message, variant) {
+    toast(title, message, variant='info') {
         this.dispatchEvent(new ShowToastEvent({ title, message, variant }));
     }
-
-    err(event) {
-        try {
-            if (!event) return '';
-            if (typeof event === 'string') return event;
-            if (event.detail && event.detail.message) return event.detail.message;
-            return JSON.stringify(event);
-        } catch {
-            return 'Unexpected error';
-        }
-    }
-
 }
