@@ -50,6 +50,7 @@
     <label>BYR on Salesforce</label>
     <navType>Standard</navType>
     <tabs>standard-home</tabs>
+    <tabs>Manage_Resumes</tabs>
     <tabs>Create_Resume</tabs>
     <tabs>View_Resume</tabs>
     <tabs>Profile__c</tabs>
