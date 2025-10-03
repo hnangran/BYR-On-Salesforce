@@ -1,0 +1,28 @@
+<template>
+    <!-- Surface messages from record-edit-form -->
+    <lightning-messages></lightning-messages>
+
+    <lightning-card title="Basic Information" icon-name="standard:contact" variant="narrow">
+        <div class="slds-p-around_medium">
+            <!-- Resume form -->
+            <lightning-record-edit-form
+                object-api-name="Resume__c"
+                record-id={resumeId}
+                onsuccess={handleResumeSuccess}
+                onsubmit={handleResumeSubmit}
+                onerror={handleResumeError}
+            >
+                <div class="slds-p-top_medium slds-p-bottom_medium slds-p-around_small slds-col slds-size_1-of-3">
+                    <!-- Name -->
+                    <lightning-input-field field-name="Name" required></lightning-input-field>
+
+                    <!-- Profile lookup + New Profile button in same row -->
+                    <lightning-input-field field-name="Profile__c" required></lightning-input-field>
+
+                    <!-- Summary field -->
+                    <lightning-input-field field-name="Summary__c" required></lightning-input-field>
+                </div>
+            </lightning-record-edit-form>
+        </div>
+    </lightning-card>
+</template>
