@@ -222,6 +222,10 @@
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
+        <tab>Manage_Resumes</tab>
+        <visibility>DefaultOn</visibility>
+    </tabVisibilities>
+    <tabVisibilities>
         <tab>Profile__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
