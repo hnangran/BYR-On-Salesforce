@@ -1,17 +1,40 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track, wire} from 'lwc';
+import { CurrentPageReference } from 'lightning/navigation';
+import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const STEPS = ['basic', 'education', 'work', 'skills', 'certs', 'review'];
 
-export default class Createresume extends LightningElement {
+export default class Createresume extends NavigationMixin(LightningElement)  {
     
+    @api mode;  // 'new' or 'edit'
+    @api recordId; // If mode='edit', the recordId of the resume to edit
+    @api recordTypeId; // Optional record type for new resumes
+    @api retUrl; // Optional URL to return to after finishing
+
+
     @api resumeId; // Store the resume ID
     @track stepIndex = 0;            // start at "basic"
     advanceAfterSubmit=false;
 
     isLoading=false;
     
-    get isEditMode() { return !!this.resumeId; }
+    @wire(CurrentPageReference)
+    parse(pr) {
+        const s = (pr && pr.state) || {};
+        const get = (k) => (s[`c__${k}`] !== undefined ? s[`c__${k}`] : s[k]); // prefer c__*, fallback to bare
+
+        this.recordId      = get('recordId') || null;
+        this.recordTypeId  = get('recordTypeId') || null;
+        this.retURL        = get('retURL') || null;
+        this.inContextOfRef= get('inContextOfRef') || null;
+
+        const explicitMode = get('mode');
+        this.mode = explicitMode || (this.recordId ? 'edit' : 'new');
+    }
+
+    get isEditMode() { return this.mode === 'edit' && this.recordId; }
+    get isNewMode()  { return this.mode === 'new' || !this.isEdit; }
     get currentStep() { return STEPS[this.stepIndex]; }
     get isFirstStep() { return this.stepIndex === 0; }
     get isLastStep() { return this.stepIndex === STEPS.length - 1; }
@@ -111,5 +134,24 @@ export default class Createresume extends LightningElement {
 
     toast(title, message, variant='info') {
         this.dispatchEvent(new ShowToastEvent({ title, message, variant }));
+    }
+
+    //Call after save
+    navigateAfterSave(id){
+        if (this.retUrl) {
+            // Navigate to the return URL
+            this[NavigationMixin.Navigate]({
+                type: 'standard__webPage',
+                attributes: {
+                    url: this.retUrl
+                }
+            });
+            return;
+        }
+        // Default: navigate to the resume record page
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: { recordId: id || this.recordId, objectApiName: 'Resume__c', actionName: 'view' }
+        });        
     }
 }
