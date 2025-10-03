@@ -85,6 +85,12 @@
                 <identifier>RecordSummary_cField</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldItem>Record.View_PDF__c</fieldItem>
+                <identifier>RecordView_PDF__cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-6bc59549-b78c-4885-b127-da9ae1eb1437</name>
         <type>Facet</type>
     </flexiPageRegions>
