@@ -4,9 +4,4 @@
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>ResumePDFVFPage</label>
-    <packageVersions>
-        <majorNumber>1</majorNumber>
-        <minorNumber>23</minorNumber>
-        <namespace>sf_chttr_apps</namespace>
-    </packageVersions>
 </ApexPage>
