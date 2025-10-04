@@ -49,14 +49,14 @@ export default class Createresume extends NavigationMixin(LightningElement)  {
 
     //Path click
     handleStepChange(e){
-        const value = event?.detail?.value;
+        const value = e?.detail?.value;
         const idx = STEPS.indexOf(value);
         if (idx !== -1) {
             this.stepIndex = idx;
         } else {
             console.warn('Unknown step value from path:', value);
-        }    
-}
+        }
+    }
 
     // Parent footer action - back
     handleBack() {
@@ -106,7 +106,7 @@ export default class Createresume extends NavigationMixin(LightningElement)  {
         // eslint-disable-next-line no-console
         console.error('Record edit error detail:', JSON.parse(JSON.stringify(d)));
         this.toast('Error', msg, 'error');
-        this._advanceAfterSubmit = false;
+        this.advanceAfterSubmit = false;
     }
 
     //parent footer action - save and next

@@ -1,3 +1,5 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, api } from 'lwc';
 
-export default class Certsstep extends LightningElement {}
+export default class Certsstep extends LightningElement {
+    @api resumeId;
+}
