@@ -1,15 +1,51 @@
 <template>
-    <!-- Show messages -->
-    <lightning-messages>
-        <template if:true={toastMessage}>
-            <div class="slds-notify slds-notify_toast slds-theme_{toastSeverity}
-                slds-notify_alert slds-theme_{toastSeverity} slds-m-bottom_small" role="status">
-                <span class="slds-assistive-text">{toastSeverity}</span>
-                <h2 class="slds-truncate">{toastMessage}</h2>
-            </div>
-        </template>
-    </lightning-messages>
+    <lightning-card title="Education" icon-name="standard:education" variant="narrow">
+        <div class="slds-p-around_medium">
 
-    <lightning-card title="Education" icon-name="standard:contact" variant="narrow">
+            <!-- Selected Education Records -->
+            <div class="slds-m-bottom_medium">
+                <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                    <h3 class="slds-text-heading_small">Education on This Resume</h3>
+                    <lightning-button variant="brand" 
+                                      label="Create New Education" 
+                                      icon-name="utility:add"
+                                      onclick={handleCreateNew}>
+                    </lightning-button>
+                </div>
+                
+                <template if:true={selectedEducations.length}>
+                    <lightning-datatable key-field="Id"
+                                         data={selectedEducations}
+                                         columns={selectedColumns}
+                                         hide-checkbox-column>
+                    </lightning-datatable>
+                </template>
+                <template if:false={selectedEducations.length}>
+                    <p class="slds-text-color_weak slds-p-vertical_small">No education entries added yet.</p>
+                </template>
+            </div>
+
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="12">
+                    <div class="slds-border_top slds-p-top_medium">
+                        <h3 class="slds-text-heading_small slds-m-bottom_small">Available Education Entries</h3>
+                        
+                        <template if:true={availableEducations.length}>
+                            <lightning-datatable key-field="Id"
+                                                 data={availableEducations}
+                                                 columns={availableColumns}
+                                                 hide-checkbox-column>
+                            </lightning-datatable>
+                        </template>
+                        <template if:false={availableEducations.length}>
+                            <p class="slds-text-color_weak slds-p-vertical_small">No available education entries found.</p>
+                        </template>
+                    </div>
+                </lightning-layout-item>
+            </lightning-layout>
+
+        </div>
     </lightning-card>
 </template>
+
+

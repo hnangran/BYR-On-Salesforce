@@ -13,7 +13,7 @@ export default class Createresume extends NavigationMixin(LightningElement)  {
     @api retUrl; // Optional URL to return to after finishing
 
 
-    @api resumeId; // Store the resume ID
+    @track resumeId; // Store the resume ID - reactive for child components
     @track stepIndex = 0;            // start at "basic"
     advanceAfterSubmit=false;
 
@@ -25,12 +25,18 @@ export default class Createresume extends NavigationMixin(LightningElement)  {
         const get = (k) => (s[`c__${k}`] !== undefined ? s[`c__${k}`] : s[k]); // prefer c__*, fallback to bare
 
         this.recordId      = get('recordId') || null;
+        this.resumeId      = this.recordId; // set resumeId for edit mode
         this.recordTypeId  = get('recordTypeId') || null;
         this.retURL        = get('retURL') || null;
         this.inContextOfRef= get('inContextOfRef') || null;
 
         const explicitMode = get('mode');
         this.mode = explicitMode || (this.recordId ? 'edit' : 'new');
+        
+        // Set resumeId for edit mode
+        if (this.mode === 'edit' && this.recordId) {
+            this.resumeId = this.recordId;
+        }
     }
 
     get isEditMode() { return this.mode === 'edit' && this.recordId; }
@@ -67,11 +73,18 @@ export default class Createresume extends NavigationMixin(LightningElement)  {
     handleNext() {
         const child = this.getActiveChild();
 
-        if (!child?.validate() ) 
+        if (!child?.validate()) 
             return;
 
-        this.advanceAfterSubmit = true;
-        child.submit();
+        // For steps that don't need form submission, just advance
+        if (this.currentStep === 'education' || this.currentStep === 'work' || 
+            this.currentStep === 'skills' || this.currentStep === 'certs') {
+            if (!this.isLastStep) this.stepIndex += 1;
+        } else {
+            // For steps with forms (basic, review), submit then advance
+            this.advanceAfterSubmit = true;
+            child.submit();
+        }
     }
 
     handleFinish(){
@@ -86,7 +99,10 @@ export default class Createresume extends NavigationMixin(LightningElement)  {
         const id = e?.detail?.id || this.resumeId;
         if (id && !this.resumeId) this.resumeId = id;
 
-        this.toast('Success', 'Step saved successfully.', 'success');
+        // Only show toast for form submissions from basic step
+        if (this.currentStep === 'basic') {
+            this.toast('Success', 'Step saved successfully.', 'success');
+        }
 
         if (this.advanceAfterSubmit) {
             this.advanceAfterSubmit = false;
@@ -153,5 +169,10 @@ export default class Createresume extends NavigationMixin(LightningElement)  {
             type: 'standard__recordPage',
             attributes: { recordId: id || this.recordId, objectApiName: 'Resume__c', actionName: 'view' }
         });        
+    }
+
+    //set placeholder text when component is initialized
+    connectedCallback() {
+        this.placeholder = 'Resume ID: ' + (this.recordId || 'New Resume');
     }
 }

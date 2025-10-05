@@ -1,19 +1,23 @@
 ({
   doInit : function(component) {
+    const vRid = component.get("v.recordId");
     const pr = component.get("v.pageReference") || {};
     const s  = pr.state || {};
-    const recordId = s.recordId || s.id || null; // some entry points use 'id'
 
+    // Fallbacks in case an entry point passes Id differently
+    const rid  = vRid || s.recordId || s.id || null;
+    const mode = rid ? 'edit' : 'new';
 
     component.find("nav").navigate({
       type: "standard__navItemPage",
-      attributes: { apiName: "Create_Resume" }, // <-- your existing tab's API name
+      attributes: { apiName: "Create_Resume" },  // your existing tab API name
       state: {
-        c__mode: recordId ? 'edit' : 'new',
-        c__recordId: recordId || null,
-        c__recordTypeId: s.recordTypeId || s.c__recordTypeId || null,
-        c__retURL: s.retURL || s.c__retURL || null,
-        c__inContextOfRef: s.inContextOfRef || s.c__inContextOfRef || null
+        // Use c__-prefix when navigating to a nav item
+        c__mode: mode,
+        c__recordId: rid,
+        c__recordTypeId: s.recordTypeId || null,
+        c__retURL: s.retURL || null,
+        c__inContextOfRef: s.inContextOfRef || null
       }
     }, true);
   }

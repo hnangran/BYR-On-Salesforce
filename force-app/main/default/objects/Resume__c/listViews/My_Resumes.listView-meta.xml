@@ -5,6 +5,6 @@
     <columns>Profile__c</columns>
     <columns>LAST_UPDATE</columns>
     <columns>View_PDF__c</columns>
-    <filterScope>Mine</filterScope>
+    <filterScope>Everything</filterScope>
     <label>My Resumes</label>
 </ListView>
