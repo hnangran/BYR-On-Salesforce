@@ -3,7 +3,7 @@ public with sharing class BYROS_ResumeEducationService {
     private static final String EDUCATION_SEARCH_LIMIT = '10';
     private static final String EDUCATION_OBJECT = 'Education__c';
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<Education__c> getUnlinkedResumeEducations(Id resumeId, Integer limitSize) {
         // Validate CRUD permissions
         if (!Schema.sObjectType.Resume_Education__c.isAccessible() || 
@@ -33,7 +33,7 @@ public with sharing class BYROS_ResumeEducationService {
 
     }
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<Education__c> getResumeEducations(Id resumeId) {
         // Validate CRUD permissions
         if (!Schema.sObjectType.Resume_Education__c.isAccessible() || 

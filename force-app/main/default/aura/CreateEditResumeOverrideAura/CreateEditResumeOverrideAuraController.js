@@ -8,17 +8,22 @@
     const rid  = vRid || s.recordId || s.id || null;
     const mode = rid ? 'edit' : 'new';
 
-    component.find("nav").navigate({
-      type: "standard__navItemPage",
-      attributes: { apiName: "Create_Resume" },  // your existing tab API name
-      state: {
-        // Use c__-prefix when navigating to a nav item
-        c__mode: mode,
-        c__recordId: rid,
-        c__recordTypeId: s.recordTypeId || null,
-        c__retURL: s.retURL || null,
-        c__inContextOfRef: s.inContextOfRef || null
+    // Use setTimeout to ensure navigation happens after component initialization
+    setTimeout($A.getCallback(function() {
+      const navService = component.find("nav");
+      if (navService) {
+        navService.navigate({
+          type: "standard__navItemPage",
+          attributes: { apiName: "Create_Resume" },
+          state: {
+            c__mode: mode,
+            c__recordId: rid,
+            c__recordTypeId: s.recordTypeId || null,
+            c__retURL: s.retURL || null,
+            c__inContextOfRef: s.inContextOfRef || null
+          }
+        }, true);
       }
-    }, true);
+    }), 100);
   }
 })

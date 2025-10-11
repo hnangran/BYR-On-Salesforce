@@ -10,6 +10,7 @@ export default class Educationstep extends NavigationMixin(LightningElement) {
     @api resumeId;
     @track selectedEducations = [];
     @track availableEducations = [];
+    @track showModal = false;
 
     selectedColumns = [
         { label: 'Name', fieldName: 'Name', type: 'text' },
@@ -17,7 +18,14 @@ export default class Educationstep extends NavigationMixin(LightningElement) {
         { label: 'Degree', fieldName: 'Degree_Type__c', type: 'text' },
         { label: 'Field of Study', fieldName: 'Field_of_Study__c', type: 'text' },
         { label: 'Date', fieldName: 'Date_Achieved__c', type: 'date' },
-        { type: 'action', typeAttributes: { rowActions: this.getRemoveActions } }
+        { 
+            type: 'button', 
+            typeAttributes: { 
+                label: 'Remove', 
+                name: 'remove', 
+                variant: 'destructive' 
+            } 
+        }
     ];
 
     availableColumns = [
@@ -26,7 +34,14 @@ export default class Educationstep extends NavigationMixin(LightningElement) {
         { label: 'Degree', fieldName: 'Degree_Type__c', type: 'text' },
         { label: 'Field of Study', fieldName: 'Field_of_Study__c', type: 'text' },
         { label: 'Date', fieldName: 'Date_Achieved__c', type: 'date' },
-        { type: 'action', typeAttributes: { rowActions: this.getAddActions } }
+        { 
+            type: 'button', 
+            typeAttributes: { 
+                label: 'Add', 
+                name: 'add', 
+                variant: 'brand' 
+            } 
+        }
     ];
 
     connectedCallback() {
@@ -36,6 +51,8 @@ export default class Educationstep extends NavigationMixin(LightningElement) {
     }
 
     async loadEducationData() {
+        if (!this.resumeId) return;
+        
         try {
             const [selected, available] = await Promise.all([
                 getResumeEducations({ resumeId: this.resumeId }),
@@ -48,13 +65,7 @@ export default class Educationstep extends NavigationMixin(LightningElement) {
         }
     }
 
-    getAddActions() {
-        return [{ label: 'Add to Resume', name: 'add' }];
-    }
 
-    getRemoveActions() {
-        return [{ label: 'Remove', name: 'remove' }];
-    }
 
     handleRowAction(event) {
         const actionName = event.detail.action.name;
@@ -70,8 +81,7 @@ export default class Educationstep extends NavigationMixin(LightningElement) {
     async handleAddEducation(educationId) {
         try {
             await linkEducations({ resumeId: this.resumeId, educationIds: [educationId] });
-            await this.loadEducationData();
-            this.toast('Success', 'Education added to resume', 'success');
+            window.location.reload();
         } catch (error) {
             this.toast('Error', 'Failed to add education: ' + this.getErrorMessage(error), 'error');
         }
@@ -80,21 +90,25 @@ export default class Educationstep extends NavigationMixin(LightningElement) {
     async handleRemoveEducation(educationId) {
         try {
             await unlinkEducations({ resumeId: this.resumeId, educationIds: [educationId] });
-            await this.loadEducationData();
-            this.toast('Success', 'Education removed from resume', 'success');
+            window.location.reload();
         } catch (error) {
             this.toast('Error', 'Failed to remove education: ' + this.getErrorMessage(error), 'error');
         }
     }
 
     handleCreateNew() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__objectPage',
-            attributes: {
-                objectApiName: 'Education__c',
-                actionName: 'new'
-            }
-        });
+        this.showModal = true;
+    }
+
+    handleCloseModal() {
+        this.showModal = false;
+    }
+
+    async handleEducationCreated() {
+        this.showModal = false;
+        // Force refresh by reloading data
+        await this.loadEducationData();
+        this.toast('Success', 'Education record created', 'success');
     }
 
     @api validate() {

@@ -17,6 +17,7 @@
                     <lightning-datatable key-field="Id"
                                          data={selectedEducations}
                                          columns={selectedColumns}
+                                         onrowaction={handleRowAction}
                                          hide-checkbox-column>
                     </lightning-datatable>
                 </template>
@@ -34,6 +35,7 @@
                             <lightning-datatable key-field="Id"
                                                  data={availableEducations}
                                                  columns={availableColumns}
+                                                 onrowaction={handleRowAction}
                                                  hide-checkbox-column>
                             </lightning-datatable>
                         </template>
@@ -46,6 +48,36 @@
 
         </div>
     </lightning-card>
+
+    <!-- Create Education Modal -->
+    <template if:true={showModal}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" 
+                            title="Close" onclick={handleCloseModal}>
+                        <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Create Education</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-record-edit-form object-api-name="Education__c" 
+                                                onsuccess={handleEducationCreated}>
+                        <lightning-input-field field-name="Name" required></lightning-input-field>
+                        <lightning-input-field field-name="Institution_Name__c"></lightning-input-field>
+                        <lightning-input-field field-name="Degree_Type__c"></lightning-input-field>
+                        <lightning-input-field field-name="Field_of_Study__c"></lightning-input-field>
+                        <lightning-input-field field-name="Date_Achieved__c"></lightning-input-field>
+                        <div class="slds-m-top_medium">
+                            <lightning-button variant="neutral" label="Cancel" onclick={handleCloseModal}></lightning-button>
+                            <lightning-button variant="brand" type="submit" label="Save"></lightning-button>
+                        </div>
+                    </lightning-record-edit-form>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
 </template>
 
 
