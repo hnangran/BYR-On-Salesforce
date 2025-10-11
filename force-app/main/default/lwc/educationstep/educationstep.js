@@ -58,8 +58,8 @@ export default class Educationstep extends NavigationMixin(LightningElement) {
                 getResumeEducations({ resumeId: this.resumeId }),
                 getUnlinkedResumeEducations({ resumeId: this.resumeId, limitSize: 50 })
             ]);
-            this.selectedEducations = selected || [];
-            this.availableEducations = available || [];
+            this.selectedEducations = [...(selected || [])];
+            this.availableEducations = [...(available || [])];
         } catch (error) {
             this.toast('Error', 'Failed to load education data: ' + this.getErrorMessage(error), 'error');
         }
@@ -81,7 +81,8 @@ export default class Educationstep extends NavigationMixin(LightningElement) {
     async handleAddEducation(educationId) {
         try {
             await linkEducations({ resumeId: this.resumeId, educationIds: [educationId] });
-            window.location.reload();
+            await this.loadEducationData();
+            this.toast('Success', 'Education added to resume', 'success');
         } catch (error) {
             this.toast('Error', 'Failed to add education: ' + this.getErrorMessage(error), 'error');
         }
@@ -90,7 +91,8 @@ export default class Educationstep extends NavigationMixin(LightningElement) {
     async handleRemoveEducation(educationId) {
         try {
             await unlinkEducations({ resumeId: this.resumeId, educationIds: [educationId] });
-            window.location.reload();
+            await this.loadEducationData();
+            this.toast('Success', 'Education removed from resume', 'success');
         } catch (error) {
             this.toast('Error', 'Failed to remove education: ' + this.getErrorMessage(error), 'error');
         }
@@ -118,6 +120,10 @@ export default class Educationstep extends NavigationMixin(LightningElement) {
     @api submit() {
         const event = new CustomEvent('success', { detail: { id: this.resumeId } });
         this.dispatchEvent(event);
+    }
+
+    @api refresh() {
+        this.loadEducationData();
     }
 
     toast(title, message, variant) {

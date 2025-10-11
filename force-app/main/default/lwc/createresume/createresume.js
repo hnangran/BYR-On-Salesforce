@@ -59,6 +59,13 @@ export default class Createresume extends NavigationMixin(LightningElement)  {
         const idx = STEPS.indexOf(value);
         if (idx !== -1) {
             this.stepIndex = idx;
+            // Wait for DOM to update, then refresh the child
+            setTimeout(() => {
+                const child = this.getActiveChild();
+                if (child?.refresh) {
+                    child.refresh();
+                }
+            }, 0);
         } else {
             console.warn('Unknown step value from path:', value);
         }
