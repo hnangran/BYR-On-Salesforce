@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Resume__c-Resume Layout</members>
+        <name>Layout</name>
+    </types>    
+    <types>
+        <members>Resume__c.Clone_Resume</members>
+        <members>Resume__c.View_Resume_As_PDF</members>
+        <name>WebLink</name>
+    </types>
+    <version>64.0</version>
+</Package>
+
+

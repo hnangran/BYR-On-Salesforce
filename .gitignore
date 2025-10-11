@@ -5320,7 +5320,6 @@ build/
 .sfdx/typings/lwc/sobjects/User.d.ts
 config/project-scratch-def.json
 docs/architecture.puml
-manifest/package.xml
 node_modules/.package-lock.json
 node_modules/.bin/acorn
 node_modules/.bin/astring

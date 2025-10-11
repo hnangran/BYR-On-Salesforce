@@ -47,7 +47,7 @@
     <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
     <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
     <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
-    <label>BYR on Salesforce</label>
+    <label>Build Your Resume on Salesforce</label>
     <navType>Standard</navType>
     <tabs>standard-home</tabs>
     <tabs>Manage_Resumes</tabs>

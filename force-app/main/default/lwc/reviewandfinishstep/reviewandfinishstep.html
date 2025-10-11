@@ -1,15 +1,7 @@
 <template>
     <!-- Show messages -->
-    <lightning-messages>
-        <template if:true={toastMessage}>
-            <div class="slds-notify slds-notify_toast slds-theme_{toastSeverity}
-                slds-notify_alert slds-theme_{toastSeverity} slds-m-bottom_small" role="status">
-                <span class="slds-assistive-text">{toastSeverity}</span>
-                <h2 class="slds-truncate">{toastMessage}</h2>
-            </div>
-        </template>
-    </lightning-messages>
-
-    <lightning-card title="Review" icon-name="standard:contact" variant="narrow">
+    <lightning-card title="Review Resume" icon-name="standard:contact" variant="narrow">
+        <!--show the c-displayresume component-->
+        <c-displayresume resume-id={resumeId}></c-displayresume>
     </lightning-card>
 </template>
