@@ -10,6 +10,10 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>BYROS_ResumeDeepClone</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>BYROS_ResumeEducationService</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -35,6 +39,10 @@
     </classAccesses>
     <classAccesses>
         <apexClass>BYROS_ResumeSkillService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>ResumeDeepClone</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <custom>false</custom>
@@ -69,9 +77,9 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
+        <editable>true</editable>
         <field>Profile__c.Applicant_User__c</field>
-        <readable>false</readable>
+        <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
@@ -130,6 +138,13 @@
     </fieldPermissions>
     <layoutAssignments>
         <layout>Education__c-Education Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Profile__c-Profile Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Profile__c-Profile Layout</layout>
+        <recordType>Profile__c.Default_Profile</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Resume_Experience__c-Resume Experience Layout</layout>

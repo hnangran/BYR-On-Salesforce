@@ -138,12 +138,26 @@
                 </template>
 
                 <template if:true={isLastStep}>
+                    <lightning-button 
+                        class="slds-m-right_small"
+                        variant="brand-outline"
+                        label="View As PDF"
+                        title="View As PDF"
+                        onclick={handleViewAsPDF}>
+                    </lightning-button>
+                    <lightning-button 
+                        class="slds-m-right_small"
+                        variant="brand-outline"
+                        label="Save & New"
+                        title="Save & New"
+                        onclick={handleSaveAndNew}>
+                    </lightning-button>
                     <lightning-button
                         variant="brand"
-                        label="Finish"
-                        title="Finish"
-                        onclick={handleFinish}
-                    ></lightning-button>
+                        label="Save & Navigate To Resume"
+                        title="Save & Navigate To Resume"
+                        onclick={handleSaveAndNavigate}>
+                    </lightning-button>
                 </template>                
             </div>
         </div>        

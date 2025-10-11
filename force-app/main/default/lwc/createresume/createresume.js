@@ -98,6 +98,34 @@ export default class Createresume extends NavigationMixin(LightningElement)  {
         this.toast('Complete', 'Your resume has been saved.', 'success');
     }
 
+    handleSaveAndNavigate(){
+        const child = this.getActiveChild();
+        if (child?.validate && !child.validate()) return;
+        
+        // Save first, then navigate
+        if (child?.submit) {
+            this.navigateAfterSave = true;
+            child.submit();
+        } else {
+            // No form to submit, navigate directly
+            this.navigateToRecord(this.resumeId || this.recordId);
+        }
+    }
+
+    handleSaveAndNew(){
+        // Reset wizard to start a new resume
+        this.stepIndex = 0;
+        this.resumeId = null;
+        this.recordId = null;
+        this.mode = 'new';
+        this.toast('Ready', 'Starting new resume creation.', 'success');
+    }
+
+    handleViewAsPDF(){
+        const url = '/apex/BYROS_ResumeAsPDF?id=' + this.resumeId;
+        window.open(url, '_blank'); // opens PDF in new tab
+    }
+
     handleFormSubmit(e){
           console.log('Submitting fields:', JSON.parse(JSON.stringify(e.detail.fields)));
     }
@@ -114,7 +142,12 @@ export default class Createresume extends NavigationMixin(LightningElement)  {
         if (this.advanceAfterSubmit) {
             this.advanceAfterSubmit = false;
             if (!this.isLastStep) this.stepIndex += 1;
-        }        
+        }
+        
+        if (this.navigateAfterSave) {
+            this.navigateAfterSave = false;
+            this.navigateToRecord(id);
+        }
     }
 
     handleFormError(e){
@@ -160,7 +193,7 @@ export default class Createresume extends NavigationMixin(LightningElement)  {
     }
 
     //Call after save
-    navigateAfterSave(id){
+    navigateToRecord(id){
         if (this.retUrl) {
             // Navigate to the return URL
             this[NavigationMixin.Navigate]({
