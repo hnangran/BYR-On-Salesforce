@@ -2,9 +2,7 @@
 to direct users to the lwc createresume. If the action is Edit Resume, it will pass the 
 Id of the Resume__c record to the createresume lwc.
 -->
-<aura:component implements="lightning:actionOverride,
-                            lightning:isUrlAddressable,
-                            flexipage:availableForAllPageTypes"
+<aura:component implements="lightning:actionOverride,lightning:isUrlAddressable,flexipage:availableForAllPageTypes"
                     access="global">
 
     <aura:attribute name="recordId" type="Id"/>
